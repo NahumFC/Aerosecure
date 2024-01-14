@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Iniciar Sesión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="contenedor-formulario contenedor">
+        <div class="imagen-formulario">
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+        </div>
+
+        <form id="loginForm" class="formulario">
+            <div class="texto-formulario">
+                <p><img src="../images/Logo.png" width="200" height="200"/>
+                    <br>Inicio de sesión Aerosecure
+                </p>
+            </div>
+            <div class="input">
+                <label for="numeroTrabajador">Número de trabajador</label>
+                <input placeholder="Ingresa tu número de trabajador" type="text" id="numero_trabajador" required>
+            </div>
+            <div class="input">
+                <label for="password">Contraseña</label>
+                <input placeholder="Ingresa tu contraseña" type="password" id="password" required>
+            </div>
+            <div class="input">
+                <input type="submit" value="Login" id="login">
+            </div>
+        </form>
+    </div>
+    <script src="../js/login.js"></script>
+
+</body>
+</html>

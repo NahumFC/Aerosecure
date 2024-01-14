@@ -31,64 +31,18 @@
                 <input placeholder="Ingresa tu nombre" type="text" name="nombre" id="nombreUsuario">
             </div>
             <div class="input">
-                <label for="contraseña">Contraseña</label>
-                <input placeholder="Ingresa tu contraseña" type="password" name="password" id="contraseña">
-            </div>
-            <div class="input">
                 <label for="n_trabajador">Numero de trabajador</label>
                 <input placeholder="Ingresa numero de trabajador" type="text" name="numero_trabajador" id="numero_trabajador">
+            </div>
+            <div class="input">
+                <label for="contraseña">Contraseña</label>
+                <input placeholder="Ingresa tu contraseña" type="password" name="password" id="contraseña">
             <div class="input">
                 <input type="submit" value="Registrar">
             </div>
         </form>
         <div id="mensajeExito" style="color:green;"></div> 
     </div>
-
-    <script>
-        var video = document.getElementById('video');
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
-        var registerForm = document.getElementById('registerForm');
-    
-        // Solicitar acceso a la cámara
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-                video.srcObject = stream;
-                video.play();
-            }).catch(function(error) {
-                console.log("Error al acceder a la cámara: ", error);
-            });
-        }
-    
-        registerForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-    
-            // Captura la foto
-            context.drawImage(video, 0, 0, 640, 480);
-    
-            // Convertir la imagen del canvas a Blob y luego enviarla
-            canvas.toBlob(function(blob) {
-                var formData = new FormData(registerForm);
-                formData.append('imagen_facial', blob, 'captura.png');
-    
-                fetch('http://localhost:5000/register', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        document.getElementById('mensajeExito').textContent = "Se registró " + formData.get('nombre') + " correctamente";
-                    } else {
-                        document.getElementById('mensajeExito').textContent = "Error en el registro: " + data.message;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    document.getElementById('mensajeExito').textContent = "Error en el registro.";
-                });
-            }, 'image/png');
-        });
-    </script>
-    
+    <script src="../js/register.js"></script>
 </body>
 </html>
