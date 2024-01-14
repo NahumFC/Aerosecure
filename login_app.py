@@ -51,7 +51,7 @@ Builder.load_string("""
 # Conexión a la base de datos MySQL
 conn = pymysql.connect(host='127.0.0.1', user='root', password='root', database='reconocimiento_facial')
 
-def iniciar_sesion(ruta_imagen_login, password):
+def iniciar_sesion(ruta_imagen_login, password, numero_trabajador):
     imagen_login = face_recognition.load_image_file(ruta_imagen_login)
     encodings_login = face_recognition.face_encodings(imagen_login)
 
@@ -59,21 +59,20 @@ def iniciar_sesion(ruta_imagen_login, password):
         encoding_login = encodings_login[0]
 
         cursor = conn.cursor()
-        cursor.execute("SELECT nombre, encoding, password FROM usuarios")
+        cursor.execute("SELECT nombre, encoding, password, numero_trabajador FROM usuarios")
         usuarios = cursor.fetchall()
 
-        for nombre, encoding_db, password_hash in usuarios:
+        for nombre, encoding_db, password_hash, num_trabajador_db in usuarios:
             encoding_db = np.frombuffer(encoding_db, dtype=np.float64)
             rostro_coincide = face_recognition.compare_faces([encoding_db], encoding_login)[0]
             password_coincide = bcrypt.checkpw(password.encode(), password_hash)
+            numero_trabajador_coincide = num_trabajador_db == numero_trabajador
 
-            if rostro_coincide and password_coincide:
+            if rostro_coincide and password_coincide and numero_trabajador_coincide:
                 return nombre, True
-            elif rostro_coincide:
-                return nombre, False
-        return "Usuario no encontrado", None
+        return "Usuario no encontrado o datos incorrectos", False
     else:
-        return "No se pudo encontrar ningún rostro en la imagen.", None
+        return "No se pudo encontrar ningún rostro en la imagen.", False
 
 def create_images_folder():
     if not os.path.exists('images'):
@@ -126,16 +125,16 @@ class FacialRecognitionLoginApp(App):
         layout.add_widget(self.camera)
 
         # Inputs y botones (tamaño por defecto)
-        self.name_input = CustomTextInput(hint_text='Ingrese su nombre', size_hint_y=None, height=40)
+        self.worker_number_input = CustomTextInput(hint_text='Ingrese su número de trabajador', size_hint_y=None, height=40)
         self.password_input = CustomTextInput(hint_text='Ingrese su contraseña', password=True, size_hint_y=None, height=40)
         login_button = CustomButton(text='Iniciar Sesión', size_hint_y=None, height=40)
         self.status_label = Label(text='', size_hint_y=None, height=30)
 
         # Agregar widgets al layout principal
-        layout.add_widget(self.name_input)
+        layout.add_widget(self.worker_number_input)
         layout.add_widget(self.password_input)
         layout.add_widget(login_button)
-        layout.add_widget(self.status_label)
+        layout.add_widget(self.status_label)    
 
         # Vincular evento del botón
         login_button.bind(on_press=self.on_login_pressed)
@@ -147,7 +146,9 @@ class FacialRecognitionLoginApp(App):
         Clock.schedule_once(self.login_user_thread, 0.1)
 
     def login_user_thread(self, dt):
-        nombre_usuario, login_exitoso = iniciar_sesion("images/captura.jpg", self.password_input.text)
+        numero_trabajador = self.worker_number_input.text
+        password = self.password_input.text
+        nombre_usuario, login_exitoso = iniciar_sesion("images/captura.jpg", password, numero_trabajador)
         if login_exitoso:
             self.status_label.text = f'Bienvenido {nombre_usuario}.'
             # Mostrar la pantalla de carga y luego ejecutar el otro programa

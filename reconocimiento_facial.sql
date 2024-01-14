@@ -7,7 +7,8 @@ USE reconocimiento_facial;
 CREATE TABLE usuarios (
     nombre VARCHAR(100),
     encoding BLOB,
-	password VARBINARY(255)
+	password VARBINARY(255),
+	numero_trabajador VARCHAR(250) PRIMARY KEY
 );
 
 CREATE TABLE delincuentes(

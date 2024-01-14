@@ -48,7 +48,7 @@ Builder.load_string("""
 # Conexión a la base de datos MySQL
 conn = pymysql.connect(host='127.0.0.1', user='root', password='root', database='reconocimiento_facial')
 
-def registrar_usuario(nombre_usuario, ruta_imagen, password):
+def registrar_usuario(nombre_usuario, ruta_imagen, password, numero_trabajador):
     imagen = face_recognition.load_image_file(ruta_imagen)
     encodings = face_recognition.face_encodings(imagen)
 
@@ -57,8 +57,8 @@ def registrar_usuario(nombre_usuario, ruta_imagen, password):
         password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO usuarios (nombre, encoding, password) VALUES (%s, %s, %s)", 
-                       (nombre_usuario, encoding.tobytes(), password_hash))
+        cursor.execute("INSERT INTO usuarios (nombre, encoding, password, numero_trabajador) VALUES (%s, %s, %s, %s)", 
+                       (nombre_usuario, encoding.tobytes(), password_hash, numero_trabajador))
         conn.commit()
         return True
     else:
@@ -89,13 +89,15 @@ class FacialRecognitionRegisterApp(App):
         layout.add_widget(self.camera)
 
         # Inputs y botones 
-        self.name_input = CustomTextInput (hint_text='Ingrese su nombre', size_hint_y=None, height=40)
-        self.password_input = CustomTextInput (hint_text='Ingrese su contraseña', password=True, size_hint_y=None, height=40)
+        self.name_input = CustomTextInput(hint_text='Ingrese su nombre', size_hint_y=None, height=40)
+        self.worker_number_input = CustomTextInput(hint_text='Ingrese su número de trabajador', size_hint_y=None, height=40)
+        self.password_input = CustomTextInput(hint_text='Ingrese su contraseña', password=True, size_hint_y=None, height=40)
         register_button = CustomButton(text='Registrar Usuario', size_hint_y=None, height=40)
         self.status_label = Label(text='', size_hint_y=None, height=30)
 
         # Agregar widgets al layout principal
         layout.add_widget(self.name_input)
+        layout.add_widget(self.worker_number_input)
         layout.add_widget(self.password_input)
         layout.add_widget(register_button)
         layout.add_widget(self.status_label)
@@ -112,12 +114,16 @@ class FacialRecognitionRegisterApp(App):
     def register_user_thread(self, *args):
         user_name = self.name_input.text
         password = self.password_input.text
-        if user_name:
-            resultado = registrar_usuario(user_name, "images/captura.jpg", password)
+        worker_number = self.worker_number_input.text
+        if user_name and worker_number:
+            resultado = registrar_usuario(user_name, "images/captura.jpg", password, worker_number)
             if resultado:
                 self.status_label.text = f'Usuario {user_name} registrado con éxito.'
             else:
                 self.status_label.text = 'Error en el registro. Intente de nuevo.'
+        else:
+            self.status_label.text = 'Nombre y número de trabajador requeridos.'
 
 if __name__ == '__main__':
+    create_images_folder()
     FacialRecognitionRegisterApp().run()
