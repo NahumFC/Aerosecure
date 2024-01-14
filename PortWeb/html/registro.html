@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Usuario</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Formulario CSS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body>
+    <div class="contenedor-formulario contenedor">
+        <div class="imagen-formulario">
+            <video id="video" width="670" height="580" autoplay></video>
+            <canvas id="canvas" width="670" height="580" style="display:none;"></canvas>
+        </div>
+
+        <form id="registerForm" class="formulario">
+            <div class="texto-formulario">
+                <p><img src="../images/Logo.png" width="200" height="200"/>
+                    <br>Registro Aerosecure
+                </p>
+            </div>
+            <div class="input">
+                <label for="nombreUsuario">Nombre de usuario</label>
+                <input placeholder="Ingresa tu nombre" type="text" name="nombre" id="nombreUsuario">
+            </div>
+            <div class="input">
+                <label for="contraseña">Contraseña</label>
+                <input placeholder="Ingresa tu contraseña" type="password" name="password" id="contraseña">
+            </div>
+            <div class="input">
+                <label for="n_trabajador">Numero de trabajador</label>
+                <input placeholder="Ingresa numero de trabajador" type="text" name="numero_trabajador" id="numero_trabajador">
+            <div class="input">
+                <input type="submit" value="Registrar">
+            </div>
+        </form>
+        <div id="mensajeExito" style="color:green;"></div> 
+    </div>
+
+    <script>
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var registerForm = document.getElementById('registerForm');
+    
+        // Solicitar acceso a la cámara
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            }).catch(function(error) {
+                console.log("Error al acceder a la cámara: ", error);
+            });
+        }
+    
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            // Captura la foto
+            context.drawImage(video, 0, 0, 640, 480);
+    
+            // Convertir la imagen del canvas a Blob y luego enviarla
+            canvas.toBlob(function(blob) {
+                var formData = new FormData(registerForm);
+                formData.append('imagen_facial', blob, 'captura.png');
+    
+                fetch('http://localhost:5000/register', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        document.getElementById('mensajeExito').textContent = "Se registró " + formData.get('nombre') + " correctamente";
+                    } else {
+                        document.getElementById('mensajeExito').textContent = "Error en el registro: " + data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.getElementById('mensajeExito').textContent = "Error en el registro.";
+                });
+            }, 'image/png');
+        });
+    </script>
+    
+</body>
+</html>
