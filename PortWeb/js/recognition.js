@@ -42,8 +42,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function displayDelincuenteInfo(delincuente) {
         const infoDiv = document.getElementById('delincuentesInfo');
         infoDiv.style.display = 'block'; 
-        infoDiv.innerHTML = `<p>Nombre: ${delincuente.nombre} ${delincuente.apellido}</p>
+    
+        const cargosConSaltosDeLinea = delincuente.cargos.replace(/;/g, '<br>');
+        const nombreArchivo = `${delincuente.nombre}_${delincuente.apellido}.png`;
+        const imagePath = `http://localhost:5000/images_INTERPOL/${nombreArchivo}`;
+    
+        infoDiv.innerHTML = `<img src="${imagePath}" alt="Fotografía de ${delincuente.nombre} ${delincuente.apellido}" style="width:200px;height:auto;">
+                             <p>Nombre: ${delincuente.nombre} ${delincuente.apellido}</p>
                              <p>Nacionalidad: ${delincuente.nacionalidad}</p>
-                             <p>Cargos: ${delincuente.cargos}</p>`;
+                             <p>Cargos:<br>${cargosConSaltosDeLinea}</p>
+                             <button id="callPoliceButton">Llamar a la policía</button>`;
     }
+    
+    
 });

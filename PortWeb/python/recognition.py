@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask import send_from_directory
 from flask_cors import CORS
 import pymysql
 import face_recognition
@@ -53,6 +54,10 @@ def get_delincuentes_info():
     except Exception as e:
         print(f"Error al obtener información de delincuentes: {e}")
         return jsonify({"status": "error", "message": "Error al obtener información"})
+
+@app.route('/images_INTERPOL/<filename>')
+def send_image(filename):
+    return send_from_directory('D:/Reconocimiento Facial-Aerosecure/images_INTERPOL', filename)
 
 
 def validate_face(imagen_base64, user_encoding):
