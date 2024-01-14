@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Aerosecure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="contenedor-formulario contenedor">
+        <div class="imagen-formulario">
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+            <form id="recognitionForm" class="formulario">
+                <div class="input">
+                    <input type="submit" value="Iniciar Reconocimiento Facial" id="recognition">
+                </div>
+            </form>
+        </div>
+        <div id="delincuentesInfo" class="informacion-delincuentes">
+            <!-- Aquí se muestra toda la info de los delincuentes -->
+        </div>
+    </div>
+    <script src="../js/recognition.js"></script>
+</body>
+</html>
