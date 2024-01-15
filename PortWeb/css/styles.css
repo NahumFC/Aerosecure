@@ -75,6 +75,20 @@ body{
     text-align: center;
 }
 
+.boton-envio {
+    background-color: #4CAF50; 
+    color: white; 
+    padding: 12px 20px; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-size: 16px; 
+}
+
+.boton-envio:hover {
+    background-color: #45a049; 
+}
+
 .informacion-delincuentes{
     padding: 40px;
     color: var(--blanco);
