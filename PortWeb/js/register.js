@@ -24,7 +24,7 @@ registerForm.addEventListener('submit', function(event) {
         var formData = new FormData(registerForm);
         formData.append('imagen_facial', blob, 'captura.png');
 
-        fetch('http://localhost:5000/register', {
+        fetch('http://localhost:5001/register', {
             method: 'POST',
             body: formData
         }).then(response => response.json())

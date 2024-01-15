@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
         var imageDataURL = canvas.toDataURL('image/png');
 
-        fetch('http://localhost:5000/recognition', {
+        fetch('http://localhost:5002/recognition', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -45,11 +45,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     
         const cargosConSaltosDeLinea = delincuente.cargos.replace(/;/g, '<br>');
         const nombreArchivo = `${delincuente.nombre}_${delincuente.apellido}.png`;
-        const imagePath = `http://localhost:5000/images_INTERPOL/${nombreArchivo}`;
+        const imagePath = `http://localhost:5002/images_INTERPOL/${nombreArchivo}`;
     
-        infoDiv.innerHTML = `<img src="${imagePath}" alt="Fotografía de ${delincuente.nombre} ${delincuente.apellido}" style="width:200px;height:auto;">
-                             <p>Nombre: ${delincuente.nombre} ${delincuente.apellido}</p>
+        infoDiv.innerHTML = `<p>Nombre: ${delincuente.nombre} ${delincuente.apellido}</p>
                              <p>Nacionalidad: ${delincuente.nacionalidad}</p>
+                             <img src="${imagePath}" alt="Fotografía de ${delincuente.nombre} ${delincuente.apellido}" style="width:200px;height:auto;">
                              <p>Cargos:<br>${cargosConSaltosDeLinea}</p>
                              <button id="callPoliceButton">Llamar a la policía</button>`;
     }

@@ -76,6 +76,7 @@ body{
 }
 
 .informacion-delincuentes{
+    padding: 40px;
     color: var(--blanco);
     justify-content: center;
     align-items: center;

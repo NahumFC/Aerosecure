@@ -35,9 +35,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }).then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                alert("Inicio de sesión exitoso: " + data.message);
+                alert("Bienvenido: " + data.message);
+                setTimeout(function() {
+                    window.location.href = '../html/recognition.html'; // Redirecciona después de 3 segundos
+                }, 3000);
             } else {
-                alert("Error en el inicio de sesión: " + data.message);
+                alert("Error: " + data.message);
             }
         })
         .catch(error => {
